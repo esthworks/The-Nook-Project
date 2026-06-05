@@ -20,6 +20,9 @@ export default function AddEntryForm() {
       },
     ]);
 
+    console.log(error);
+alert(error ? error.message : "INSERT OK");
+
   if (error) {
     console.error(error);
     alert(error.message);
