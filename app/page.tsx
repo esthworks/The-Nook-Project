@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 import AddEntryForm from "../components/AddEntryForm";
-
+export const dynamic = "force-dynamic";
 export default async function Home() {
   const { data } = await supabase
     .from("entries")
