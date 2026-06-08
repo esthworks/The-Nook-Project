@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function AddEntryForm() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("book");
+  const [status, setStatus] = useState("spotted");
   const router = useRouter();
 
  async function addEntry() {
@@ -16,12 +17,9 @@ export default function AddEntryForm() {
       {
         title,
         category,
-        status: "to_do",
+        status,
       },
     ]);
-
-    console.log(error);
-alert(error ? error.message : "INSERT OK");
 
   if (error) {
     console.error(error);
@@ -32,6 +30,7 @@ alert(error ? error.message : "INSERT OK");
 
   setTitle("");
 setCategory("book");
+setStatus("spotted");
 
   router.refresh();
 }
@@ -66,6 +65,21 @@ setCategory("book");
         </select>
       </div>
 
+      <div className="mt-4">
+  <select
+    value={status}
+    onChange={(e) => setStatus(e.target.value)}
+    className="w-full rounded-lg border p-2"
+  >
+    <option value="spotted">Repéré</option>
+    <option value="recommended">Recommandé</option>
+    <option value="to_discover">À découvrir</option>
+    <option value="in_progress">En cours</option>
+    <option value="completed">Terminé</option>
+    <option value="abandoned">Abandonné</option>
+  </select>
+</div>
+
       <button
   onClick={addEntry}
   className="mt-4 rounded-lg bg-stone-800 px-4 py-2 text-white"
@@ -73,9 +87,6 @@ setCategory("book");
   Add
 </button>
 
-      <p className="mt-4 text-sm text-stone-500">
-        {title} ({category})
-      </p>
     </div>
   );
 }

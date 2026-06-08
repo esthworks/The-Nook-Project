@@ -2,6 +2,8 @@ import Link from "next/link";
 import { supabase } from "../../../lib/supabase";
 import EditNotesForm from "../../../components/EditNotesForm";
 import RatingForm from "../../../components/RatingForm";
+import EditEntryDetailsForm from "../../../components/EditEntryDetailsForm";
+import StatusForm from "../../../components/StatusForm";
 
 export default async function EntryPage({
   params,
@@ -41,11 +43,33 @@ export default async function EntryPage({
           {entry?.title}
         </h1>
 
-        <div className="mt-6 inline-block rounded-full bg-[#d9ccb8] px-4 py-2 text-sm font-medium text-[#2b241d]">
-          {entry?.status === "to_do"
-  ? "Want to read"
-  : entry?.status}
-        </div>
+         <div className="mt-6">
+  <StatusForm
+    id={entry!.id}
+    status={entry?.status}
+  />
+</div>
+
+
+<EditEntryDetailsForm
+  id={entry.id}
+  category={entry.category}
+
+  initialAuthor={entry.author}
+  initialDirector={entry.director}
+
+  initialArtist={entry.artist}
+  initialAlbum={entry.album}
+
+  initialVenue={entry.venue}
+
+  initialExperienceDate={entry.experience_date}
+  initialStartDate={entry.start_date}
+  initialEndDate={entry.end_date}
+
+  initialSeenInCinema={entry.seen_in_cinema}
+/>
+
 
 <div className="mt-6">
   <h2 className="mb-2 text-lg font-semibold text-[#2b241d]">

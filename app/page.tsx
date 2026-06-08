@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { supabase } from "../lib/supabase";
 import AddEntryForm from "../components/AddEntryForm";
+
 export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const { data } = await supabase
     .from("entries")
@@ -27,70 +29,88 @@ export default async function Home() {
 
   function renderSection(
     title: string,
+    icon: string,
     entries: typeof books
   ) {
+    const statusLabels: Record<string, string> = {
+      spotted: "Repéré",
+      recommended: "Recommandé",
+      to_discover: "À découvrir",
+      in_progress: "En cours",
+      completed: "Terminé",
+      abandoned: "Abandonné",
+    };
+
     return (
-      <div className="mt-10">
-        <h2 className="mb-4 text-sm font-bold tracking-[0.2em] text-[#cbbfae]">
-          {title}
+      <section className="mt-12">
+        <h2 className="mb-5 text-2xl font-semibold text-[#f4ecdf]">
+          {icon} {title}
         </h2>
 
         {entries.length === 0 ? (
-          <p className="text-[#7b6855]">
+          <p className="text-[#cbbfae]">
             No entries yet.
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="flex gap-5 overflow-x-auto pb-4">
             {entries.map((entry) => (
               <Link
                 href={`/entry/${entry.id}`}
                 key={entry.id}
-                className="block rounded-2xl border border-[#5a4632] bg-[#efe6d5] p-5 shadow-sm transition hover:scale-[1.01]"
+                className="flex h-64 w-44 flex-shrink-0 flex-col rounded-3xl border border-[#5a4632] bg-[#efe6d5] p-5 shadow-md transition hover:-translate-y-1"
               >
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">
-                    {entry.title}
-                  </h2>
+                <div className="flex items-start gap-2">
+                  <span className="text-xl">
+                    {icon}
+                  </span>
 
-                  <span className="rounded-full bg-stone-100 px-3 py-1 text-sm">
-                    {entry.status === "to_do"
-                      ? "Want to read"
-                      : entry.status}
+                  <h3 className="text-lg font-semibold text-[#2b241d]">
+                    {entry.title}
+                  </h3>
+                </div>
+
+                <div className="flex-1" />
+
+                <div className="mb-3">
+                  <span className="rounded-full bg-[#d9ccb8] px-3 py-1 text-sm text-[#2b241d]">
+                    {statusLabels[entry.status] ?? entry.status}
                   </span>
                 </div>
 
-                <p className="mt-3 text-[#7b6855]">
-                  {entry.category}
-                </p>
+                <div className="text-xl">
+                  {"⭐".repeat(entry.rating ?? 0)}
+                </div>
               </Link>
             ))}
           </div>
         )}
-      </div>
+      </section>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#1f2a24] p-8">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="text-5xl font-bold text-[#efe6d5]">
-          The Nook Project
-        </h1>
+    <main className="min-h-screen bg-[#314238] p-8">
+      <div className="mx-auto max-w-6xl">
+        <header className="mb-16">
+          <h1 className="text-6xl font-bold text-[#efe6d5]">
+            Nook
+          </h1>
 
-        <div className="mt-3">
-          <p className="text-stone-600">
+          <p className="mt-3 text-[#cbbfae]">
             Keep track of what inspires you.
           </p>
 
-          <AddEntryForm />
-        </div>
+          <div className="mt-8 rounded-3xl bg-[#3a4d43] p-6">
+            <AddEntryForm />
+          </div>
+        </header>
 
-        {renderSection("BOOKS", books)}
-        {renderSection("MOVIES", movies)}
-        {renderSection("SERIES", series)}
-        {renderSection("MUSIC", music)}
-        {renderSection("EXHIBITIONS", exhibitions)}
-        {renderSection("THEATRE", theatre)}
+        {renderSection("Books", "📚", books)}
+        {renderSection("Movies", "🎬", movies)}
+        {renderSection("Series", "📺", series)}
+        {renderSection("Music", "🎵", music)}
+        {renderSection("Exhibitions", "🖼️", exhibitions)}
+        {renderSection("Theatre", "🎭", theatre)}
       </div>
     </main>
   );
